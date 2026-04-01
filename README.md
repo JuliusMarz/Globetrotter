@@ -1,5 +1,5 @@
 # Globetrotter
-This is some code to create your own "Geoguessr" style tournament with your friends.
+This is some free code to create your own "Geoguessr" (https://www.geoguessr.com/) style tournament with your friends.
 !!It only works properly, if you have downloaded all the contents in this folder!!
 
 Rankings.html will give you a nice overview over the current rankings
