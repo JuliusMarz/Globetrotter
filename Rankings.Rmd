@@ -1,0 +1,411 @@
+---
+output:
+  html_document:
+   self_contained: true
+---
+
+<style>
+body {
+  background: linear-gradient(
+    rgba(245, 222, 179, 0.25),
+    rgba(245, 222, 179, 0.25)
+  ),
+  url("https://www.transparenttextures.com/patterns/paper-fibers.png"); /* subtle paper texture */
+  
+  font-family: 'Patrick Hand', sans-serif;
+}
+
+/* ⭐ Main content card */
+.main-card {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 35px;
+
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* ⭐ Subtle “passport stamp” style for round titles */
+.round-title {
+  font-family: 'Patrick Hand', cursive;
+  text-align: center;
+  color: #1d3557;
+
+  border: 2px dashed rgba(29, 53, 87, 0.2);
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 12px;
+
+  background-color: rgba(255,255,255,0.6);
+}
+
+/* ⭐ Tourguide text styling */
+.tourguide-box {
+  text-align: center;
+  font-size: 22px;
+  margin-top: 25px;
+
+  background-color: rgba(255,255,255,0.7);
+  padding: 15px;
+  border-radius: 12px;
+
+  border: 1px dashed rgba(69, 123, 157, 0.3);
+}
+</style>
+
+<style>
+body {
+background-color: rgba(236, 214, 178, 0.3); /* ⭐ soft sand color */
+}
+</style>
+
+<div style="text-align: center; margin-bottom: 30px;">
+
+  <h1 style="
+    font-family: 'Patrick Hand', cursive;
+    font-size: 64px;
+    color: #1d3557;
+    margin-bottom: 10px;
+  ">
+    🌍 Globetrotters
+  </h1>
+
+</div>
+
+<div class="main-card">
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  results = "asis"
+)
+```
+
+```{r}
+library(dplyr)
+library(gt)
+library(scales)
+
+manual_rounds <- data.frame(
+  round = c(1,1,1,1,1,
+            2,2,2,2,2),
+  player = c("Julius","Kathy","Uli","Ria","Leon",
+             "Julius","Kathy","Uli","Ria","Leon"),
+  Distance = c(0, 166, 912, 912, 3660,
+               0, 170000, 136000, 169000,8),
+  role = c("Tourguide","Traveler","Traveler","Traveler","Traveler",
+           "Tourguide","Traveler","Traveler","Traveler","Traveler"),
+  Bonusview = c("no","yes","no","no","no",
+                "no", "no", "no", "no", "yes"),
+  date = as.Date(c("2026-03-29","2026-03-29","2026-03-29","2026-03-29","2026-03-29",
+                   "2026-03-31","2026-03-31","2026-03-31","2026-03-31","2026-03-31"))  # ⭐ NEW
+)
+```
+
+
+```{r}
+# ⭐ NEW: Dynamic dropdown with dates for each round
+
+all_rounds <- sort(unique(manual_rounds$round))
+# ⭐ NEW: create a date for each round
+for(r in all_rounds){
+  
+  round_date <- manual_rounds %>%
+    filter(round == r) %>%
+    pull(date) %>%
+    unique()
+
+  cat(paste0(
+    "<option value='round_", r, "'>🎯 Round ", r, " (",
+    format(round_date, "%b %d, %Y"),
+    ")</option>"
+  ))
+}
+
+cat("<div style='text-align:center; margin-bottom:20px;'>")
+
+# Global Rankings button
+cat("<button onclick=\"showGlobal()\" style='padding:10px 20px; font-size:18px; margin-bottom:10px;'>🌍 Global Rankings</button><br>")
+
+# Dropdown for rounds
+cat("<select id='roundSelect' onchange=\"showPage(this.value)\" style='padding:10px 20px; font-size:18px;'>")
+cat("<option value='' disabled selected>Select Round</option>")   # ⭐ placeholder
+
+# ⭐ Loop to create dropdown options with dates
+for(r in all_rounds){
+  cat(paste0(
+    "<option value='round_", r, "'>🎯 Round ", r, " (", 
+    format(round_date, "%b %d, %Y"), 
+    ")</option>"
+  ))
+}
+cat("</select>")
+
+cat("</div>")
+
+# ⭐ GLOBAL PAGE (visible by default)
+cat("<div id='global_page' style='display:block;'>")
+
+cat("<div style='width:100%;'>")
+
+# Step 1: Calculate Travel Miles for each player in each round
+round_miles <- manual_rounds %>%
+  group_by(round) %>%
+  
+  # ⭐ STEP 1: Travelers with Bonusview penalty
+  mutate(`Travel Miles` = ifelse(
+    role == "Traveler",
+    5000 - (Distance / 100) - ifelse(Bonusview == "yes", 1000, 0),
+    NA
+  )) %>%
+  
+  # ⭐ STEP 2: Count Bonusview "yes"
+  mutate(bonus_count = sum(Bonusview == "yes" & role == "Traveler")) %>%
+  
+  # ⭐ STEP 3: Tourguide calculation + bonus
+  mutate(`Travel Miles` = ifelse(
+    role == "Tourguide",
+    (max(`Travel Miles`, na.rm = TRUE) - min(`Travel Miles`, na.rm = TRUE)) +
+    (bonus_count * 200),
+    `Travel Miles`
+  )) %>%
+  
+  ungroup() %>%
+  select(-bonus_count)  # clean up helper column
+
+# Step 2: Aggregate across all rounds for global table
+global_table <- round_miles %>%
+  group_by(player) %>%
+  summarise(
+    Travelers = sum(role == "Traveler"),
+    Tourguides = sum(role == "Tourguide"),
+    `Travel Miles` = sum(`Travel Miles`),  # ✅ sum across all rounds
+    .groups="drop"
+  ) %>%
+  mutate(
+    `Passport Value` = `Travel Miles` / (Travelers + (Tourguides / 2))
+  ) %>%
+  arrange(desc(`Passport Value`)) %>%
+  mutate(Rank = row_number()) %>%
+  select(Rank, Player = player, Travelers, Tourguides, `Travel Miles`, `Passport Value`)
+
+global_table %>%
+  gt() %>%
+  opt_table_font(font = list(google_font("Patrick Hand"), default_fonts())) %>%
+  fmt_number(columns="Passport Value", decimals=2) %>%
+  cols_align(align="center", -Player) %>%
+  cols_align(align="left", Player) %>%
+  opt_row_striping() %>%
+  data_color(
+    columns="Passport Value",
+    colors=col_numeric(c("#fefae0","#ffd166"), domain=NULL)
+  ) %>%
+  tab_style(
+    style=list(cell_fill(color="#457b9d"),
+               cell_text(color="white", weight="bold")),
+    locations=cells_column_labels(everything())
+  ) %>%
+  tab_style(
+    style=list(cell_text(weight="bold")),
+    locations=cells_body(rows=Rank<=3)
+  ) %>%
+  text_transform(
+    locations=cells_body(columns=Rank),
+    fn=function(x){
+      ifelse(x==1,"🥇",ifelse(x==2,"🥈",ifelse(x==3,"🥉",x)))
+    }
+  ) %>%
+  tab_options(
+    table.font.size=px(22),
+    data_row.padding=px(16),
+    container.width=pct(100),
+    column_labels.padding=px(14)
+  ) %>%
+  print()
+
+cat("</div>")  # End inner flex
+cat("</div>")  # End GLOBAL page
+```
+
+
+```{r}
+# Get all rounds
+all_rounds <- sort(unique(manual_rounds$round))
+
+# ⭐ NEW: Vector of links per round – you can fill your own URLs here
+# Example: round_links <- c("link_for_round_1", "link_for_round_2", ...)
+round_links <- c(
+  "https://www.google.com/maps/d/u/0/edit?mid=1KdwxVIGDPWIQLeWfVre8inAp5k28rQk&usp=sharing",
+  "https://www.google.com/maps/d/u/0/edit?mid=1UXs0VPva_nMVIpGxFT3ENjYrq_PAgf8&usp=sharing"
+
+)
+names(round_links) <- all_rounds
+
+# ⭐ NEW: Bonusview images per round
+round_images <- c(
+  "WhatsApp Image 2026-03-29 at 21.36.45.jpeg",
+  "WhatsApp Image 2026-04-01 at 10.17.27.jpeg"
+)
+names(round_images) <- all_rounds
+
+# Loop through each round
+for(r in all_rounds){
+
+  # ⭐ Start div for this round (hidden by default)
+  cat(paste0("<div id='round_", r, "' style='display:none;'>"))
+
+  # ⭐ Dynamic title for each round
+cat("<div style='text-align:center; margin-bottom:15px;'>")
+cat(paste0("<div class='round-title'>🌍 Round ", r, "</div>"))
+cat("</div>")
+cat("<div style='width:100%; max-width:1200px; margin:0 auto;'>")
+
+  # Table generation filtered by current round
+# Assign a random "Distance" to each player for this example
+round_table <- manual_rounds %>%
+  filter(round == r)
+
+# Calculate Travel Miles according to rules
+# Travelers base calculation + Bonusview penalty
+round_table <- round_table %>%
+  mutate(`Travel Miles` = ifelse(
+    role == "Traveler",
+    5000 - (Distance / 100) - ifelse(Bonusview == "yes", 1000, 0),
+    NA
+  ))
+# Step 3: Calculate Travel Miles for Tourguide
+traveler_miles <- round_table$`Travel Miles`[round_table$role == "Traveler"]
+
+# Count Bonusview "yes"
+bonus_count <- sum(round_table$Bonusview == "yes" & round_table$role == "Traveler")
+
+round_table <- round_table %>%
+  mutate(`Travel Miles` = ifelse(
+    role == "Tourguide",
+    (max(traveler_miles) - min(traveler_miles)) + (bonus_count * 200),
+    `Travel Miles`
+  ))
+# Rank players by Travel Miles descending
+round_table <- round_table %>%
+  arrange(desc(`Travel Miles`)) %>%
+  mutate(Rank = row_number()) %>%
+  select(Rank, Player=player, `Distance (m)` = Distance, Bonusview, `Travel Miles`)
+
+  round_table %>%
+    gt() %>%
+    opt_table_font(font = list(google_font("Patrick Hand"), default_fonts())) %>%
+    cols_align(align="center", -Player) %>%
+    cols_align(align="left", Player) %>%
+    opt_row_striping() %>%
+    tab_style(
+      style=list(cell_fill(color="#457b9d"),
+                 cell_text(color="white", weight="bold")),
+      locations=cells_column_labels(everything())
+    ) %>%
+    tab_style(
+      style=list(cell_text(weight="bold")),
+      locations=cells_body(rows=Rank<=3)
+    ) %>%
+    text_transform(
+      locations=cells_body(columns=Rank),
+      fn=function(x){
+        ifelse(x==1,"🥇",ifelse(x==2,"🥈",ifelse(x==3,"🥉",x)))
+      }
+    ) %>%
+    tab_options(
+      table.font.size=px(22),
+      data_row.padding=px(16),
+      container.width=pct(100),
+      column_labels.padding=px(14)
+    ) %>%
+    print()
+
+  cat("</div>")  # End flex container
+
+  # ⭐ NEW: Text about the tourguide + location link
+ tourguide_name <- manual_rounds %>%
+  filter(round == r, role == "Tourguide") %>%
+  pull(player)
+ 
+cat(paste0(
+  "<div class='tourguide-box'>",
+  
+  "<div style='margin-bottom:10px;'>",
+  "🧭 The tourguide in this round was: <strong>", tourguide_name, "</strong>",
+  "</div>",
+
+  # ⭐ BUTTON ROW
+  "<div style='display:flex; justify-content:center; gap:15px;'>",
+
+    # 📍 LOCATION BUTTON
+    "<a href='", round_links[r], "' target='_blank' ",
+    "style='text-decoration:none; padding:10px 15px; border-radius:10px; ",
+    "background-color:#457b9d; color:white; font-size:16px;'>",
+    "📍 View location</a>",
+
+    # 📸 BONUSVIEW BUTTON
+    "<button onclick=\"toggleImage('img_", r, "')\" ",
+    "style='padding:10px 15px; border-radius:10px; border:none; ",
+    "background-color:#e63946; color:white; font-size:16px; cursor:pointer;'>",
+    "📸 Bonusview</button>",
+
+  "</div>",
+
+  # ⭐ IMAGE (HIDDEN BY DEFAULT)
+  "<div id='img_", r, "' style='display:none; margin-top:15px;'>",
+    "<img src='", round_images[r], "' ",
+    "style='max-width:100%; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.15);'>",
+  "</div>",
+
+  "</div>"
+))
+  cat("</div>")  # End round div
+}
+```
+
+<!-- ⭐ NEW: Page switching script -->
+
+<script>
+function showPage(pageId) {
+  // Hide global
+  document.getElementById('global_page').style.display = 'none';
+  
+  // Hide all rounds
+  var rounds = document.querySelectorAll("[id^='round_']");
+  rounds.forEach(function(r){ r.style.display = 'none'; });
+
+  // Show selected
+  var el = document.getElementById(pageId);
+  if(el) el.style.display = 'block';
+}
+
+function showGlobal() {
+  // Hide all rounds
+  var rounds = document.querySelectorAll("[id^='round_']");
+  rounds.forEach(function(r){ r.style.display = 'none'; });
+
+  // Show global
+  document.getElementById('global_page').style.display = 'block';
+
+  // ⭐ RESET DROPDOWN (THIS FIXES YOUR BUG)
+  var dropdown = document.getElementById('roundSelect');
+  if(dropdown) dropdown.selectedIndex = 0;
+}
+
+function toggleImage(id) {
+  var el = document.getElementById(id);
+  if (el.style.display === "none") {
+    el.style.display = "block";
+  } else {
+    el.style.display = "none";
+  }
+}
+</script>
+</div>
