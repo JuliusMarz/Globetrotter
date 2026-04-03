@@ -146,11 +146,18 @@ cat("<option value='' disabled selected>Select Round</option>")   # ⭐ placehol
 
 # ⭐ Loop to create dropdown options with dates
 for(r in all_rounds){
+
+  round_date <- manual_rounds %>%
+    filter(round == r) %>%
+    pull(date) %>%
+    unique()
+
   cat(paste0(
     "<option value='round_", r, "'>🎯 Round ", r, " (", 
     format(round_date, "%b %d, %Y"), 
     ")</option>"
   ))
+
 }
 cat("</select>")
 
@@ -401,7 +408,7 @@ function showGlobal() {
   // Show global
   document.getElementById('global_page').style.display = 'block';
 
-  // ⭐ RESET DROPDOWN (THIS FIXES YOUR BUG)
+  // ⭐ RESET DROPDOWN 
   var dropdown = document.getElementById('roundSelect');
   if(dropdown) dropdown.selectedIndex = 0;
 }
