@@ -96,22 +96,28 @@ library(scales)
 manual_rounds <- data.frame(
   round = c(1,1,1,1,1,
             2,2,2,2,2,
-            3,3,3,3,3),
+            3,3,3,3,3,
+            4,4,4,4,4),
   player = c("Julius","Kathy","Uli","Ria","Leon",
              "Julius","Kathy","Uli","Ria","Leon",
-             "Julius", "Kathy", "Uli", "Leon", "Kamil"),
+             "Julius", "Kathy", "Uli", "Leon", "Kamil",
+             "Kathy", "Uli", "Ria", "Leon", "Henri"),
   Distance = c(0, 166, 912, 912, 3660,
                0, 170000, 136000, 169000,8,
-               0, 6, 3470, 57400, 9720),
+               0, 6, 3470, 57400, 9720,
+               0, 26900, 26900, 48500, 3080),
   role = c("Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide","Traveler","Traveler","Traveler","Traveler",
-           "Tourguide","Traveler","Traveler","Traveler","Traveler"),
+           "Tourguide","Traveler","Traveler","Traveler","Traveler",
+           "Tourguide", "Traveler","Traveler","Traveler","Traveler"),
   Bonusview = c("no","yes","no","no","no",
                 "no", "no", "no", "no", "yes",
+                "no", "no", "no", "no", "no",
                 "no", "no", "no", "no", "no"),
   date = as.Date(c("2026-03-29","2026-03-29","2026-03-29","2026-03-29","2026-03-29",
                    "2026-03-31","2026-03-31","2026-03-31","2026-03-31","2026-03-31",
-                   "2026-04-01","2026-04-01","2026-04-01","2026-04-01","2026-04-01"))  # ⭐ NEW
+                   "2026-04-01","2026-04-01","2026-04-01","2026-04-01","2026-04-01",
+                   "2026-04-03","2026-04-03","2026-04-03","2026-04-03","2026-04-03"))  # ⭐ NEW
 )
 ```
 
@@ -257,7 +263,8 @@ all_rounds <- sort(unique(manual_rounds$round))
 round_links <- c(
   "https://www.google.com/maps/d/u/0/edit?mid=1KdwxVIGDPWIQLeWfVre8inAp5k28rQk&usp=sharing",
   "https://www.google.com/maps/d/u/0/edit?mid=1UXs0VPva_nMVIpGxFT3ENjYrq_PAgf8&usp=sharing",
-  "https://www.google.com/maps/d/u/0/edit?mid=1DVw2xqJ7TwaK4MD_ikj54iKldkVzlOo&usp=sharing"
+  "https://www.google.com/maps/d/u/0/edit?mid=1DVw2xqJ7TwaK4MD_ikj54iKldkVzlOo&usp=sharing",
+  "https://www.google.com/maps/d/u/0/embed?mid=1IlyZRplQF__NmrUdlJ414Xx27jm-gi4&ehbc=2E312F" 
 )
 names(round_links) <- all_rounds
 
@@ -265,7 +272,8 @@ names(round_links) <- all_rounds
 round_images <- c(
   "Round1_bonus.jpeg",
   "Round2_bonus.jpeg",
-  "Round3_bonus.jpeg"
+  "Round3_bonus.jpeg",
+  "Round4_bonus.jpeg"
 )
 names(round_images) <- all_rounds
 
