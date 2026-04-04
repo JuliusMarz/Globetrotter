@@ -181,7 +181,7 @@ round_miles <- manual_rounds %>%
   # ⭐ STEP 1: Travelers with Bonusview penalty
   mutate(`Travel Miles` = ifelse(
     role == "Traveler",
-    5000 - (Distance / 100) - ifelse(Bonusview == "yes", 1000, 0),
+    5000 - (Distance / 200) - ifelse(Bonusview == "yes", 1000, 0),
     NA
   )) %>%
   
