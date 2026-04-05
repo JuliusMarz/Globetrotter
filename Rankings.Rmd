@@ -1,7 +1,7 @@
 ---
 output:
   html_document:
-   self_contained: true
+   self_contained: false
 ---
 
 <style>
@@ -13,6 +13,10 @@ body {
   url("https://www.transparenttextures.com/patterns/paper-fibers.png"); /* subtle paper texture */
   
   font-family: 'Patrick Hand', sans-serif;
+}
+
+button, select {
+  font-family: 'Patrick Hand', cursive;
 }
 
 /* ⭐ Main content card */
@@ -45,6 +49,7 @@ body {
 
 /* ⭐ Tourguide text styling */
 .tourguide-box {
+font-family: 'Patrick Hand', cursive;
   text-align: center;
   font-size: 22px;
   margin-top: 25px;
@@ -60,6 +65,35 @@ body {
 <style>
 body {
 background-color: rgba(236, 214, 178, 0.3); /* ⭐ soft sand color */
+}
+</style>
+
+<style>
+/* DT tables font */
+table.dataTable {
+font-size: 22px;
+  font-family: 'Patrick Hand', cursive !important;
+}
+.dataTables_wrapper {
+  font-family: 'Patrick Hand', cursive !important;
+}
+</style>
+
+<style>
+/* ⭐ DT global table header styling */
+#global_page table.dataTable thead th {
+  background-color: #457b9d !important;
+  color: white !important;
+  font-weight: bold !important;
+  text-align: center;
+  font-family: 'Patrick Hand', cursive !important;
+}
+#global_page table.dataTable tbody td {
+  text-align: center;
+  font-family: 'Patrick Hand', cursive !important;
+}
+#global_page table.dataTable tbody td:nth-child(2) {
+  text-align: left; /* Player column */
 }
 </style>
 
@@ -89,9 +123,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r}
+
 library(dplyr)
 library(gt)
 library(scales)
+library(DT)
 
 manual_rounds <- data.frame(
   round = c(1,1,1,1,1,
@@ -197,7 +233,7 @@ round_miles <- manual_rounds %>%
   )) %>%
   
   ungroup() %>%
-  select(-bonus_count)  # clean up helper column
+  select(-bonus_count)
 
 # Step 2: Aggregate across all rounds for global table
 global_table <- round_miles %>%
@@ -205,7 +241,7 @@ global_table <- round_miles %>%
   summarise(
     Travelers = sum(role == "Traveler"),
     Tourguides = sum(role == "Tourguide"),
-    `Travel Miles` = sum(`Travel Miles`),  # ✅ sum across all rounds
+    `Travel Miles` = sum(`Travel Miles`),
     .groups="drop"
   ) %>%
   mutate(
@@ -215,42 +251,55 @@ global_table <- round_miles %>%
   mutate(Rank = row_number()) %>%
   select(Rank, Player = player, Travelers, Tourguides, `Travel Miles`, `Passport Value`)
 
-global_table %>%
-  gt() %>%
-  opt_table_font(font = list(google_font("Patrick Hand"), default_fonts())) %>%
-  fmt_number(columns="Passport Value", decimals=2) %>%
-  cols_align(align="center", -Player) %>%
-  cols_align(align="left", Player) %>%
-  opt_row_striping() %>%
-  data_color(
-    columns="Passport Value",
-    colors=col_numeric(c("#fefae0","#ffd166"), domain=NULL)
-  ) %>%
-  tab_style(
-    style=list(cell_fill(color="#457b9d"),
-               cell_text(color="white", weight="bold")),
-    locations=cells_column_labels(everything())
-  ) %>%
-  tab_style(
-    style=list(cell_text(weight="bold")),
-    locations=cells_body(rows=Rank<=3)
-  ) %>%
-  text_transform(
-    locations=cells_body(columns=Rank),
-    fn=function(x){
-      ifelse(x==1,"🥇",ifelse(x==2,"🥈",ifelse(x==3,"🥉",x)))
-    }
-  ) %>%
-  tab_options(
-    table.font.size=px(22),
-    data_row.padding=px(16),
-    container.width=pct(100),
-    column_labels.padding=px(14)
-  ) %>%
-  print()
+# ⭐ Convert top 3 ranks into medals
+global_table$Rank <- as.character(global_table$Rank)
+global_table$Rank[global_table$Rank == "1"] <- "🥇"
+global_table$Rank[global_table$Rank == "2"] <- "🥈"
+global_table$Rank[global_table$Rank == "3"] <- "🥉"
 
-cat("</div>")  # End inner flex
-cat("</div>")  # End GLOBAL page
+# ⭐ NEW: Make gt table INTERACTIVE (click-to-sort)
+datatable(
+  global_table,
+  options = list(
+    pageLength = 10,
+    autoWidth = TRUE,
+    dom = 't',          # optional: hides extra DT controls to match round page style
+    ordering = TRUE
+  ),
+  rownames = FALSE,
+  class = "stripe hover",
+  colnames = c(
+    "Rank",
+    "Player",
+    "Travelers",
+    "Tourguides",
+    "Travel Miles",
+    "Passport Value"
+  )
+) %>%
+  formatRound("Travel Miles", 2) %>%
+  formatRound("Passport Value", 2) %>%
+  formatStyle(
+    columns = names(global_table),
+    'text-align'='center'
+  ) %>%
+  formatStyle(
+    columns = "Player",
+    'text-align'='left'
+  )%>% formatStyle(
+    'Rank',
+    target = 'row',
+    backgroundColor = DT::styleEqual(
+      c("🥇","🥈","🥉"),
+      c("#fff7d6","#f0f0f0","#fdebd0")  # subtle pastel highlights instead of gold/silver/bronze
+    ),
+    fontWeight = DT::styleEqual(
+      c("🥇","🥈","🥉"),
+      c("bold","bold","bold")
+    )
+)
+cat("</div>")
+cat("</div>")
 ```
 
 
@@ -261,10 +310,10 @@ all_rounds <- sort(unique(manual_rounds$round))
 # ⭐ NEW: Vector of links per round – you can fill your own URLs here
 # Example: round_links <- c("link_for_round_1", "link_for_round_2", ...)
 round_links <- c(
-  "https://www.google.com/maps/d/u/0/edit?mid=1KdwxVIGDPWIQLeWfVre8inAp5k28rQk&usp=sharing",
-  "https://www.google.com/maps/d/u/0/edit?mid=1UXs0VPva_nMVIpGxFT3ENjYrq_PAgf8&usp=sharing",
-  "https://www.google.com/maps/d/u/0/edit?mid=1DVw2xqJ7TwaK4MD_ikj54iKldkVzlOo&usp=sharing",
-  "https://www.google.com/maps/d/u/0/embed?mid=1IlyZRplQF__NmrUdlJ414Xx27jm-gi4&ehbc=2E312F" 
+  "Round1.html",
+  "Round2.html",
+  "Round3.html",
+  "Round4.html" 
 )
 names(round_links) <- all_rounds
 
@@ -322,7 +371,9 @@ round_table <- round_table %>%
 
   round_table %>%
     gt() %>%
-    opt_table_font(font = list(google_font("Patrick Hand"), default_fonts())) %>%
+    opt_table_font(
+  font = list(gt::google_font("Patrick Hand"))
+)%>%
     cols_align(align="center", -Player) %>%
     cols_align(align="left", Player) %>%
     opt_row_striping() %>%
