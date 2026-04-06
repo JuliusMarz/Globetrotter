@@ -133,27 +133,34 @@ manual_rounds <- data.frame(
   round = c(1,1,1,1,1,
             2,2,2,2,2,
             3,3,3,3,3,
-            4,4,4,4,4),
+            4,4,4,4,4,
+            5,5,5,5,5,5,5),
   player = c("Julius","Kathy","Uli","Ria","Leon",
              "Julius","Kathy","Uli","Ria","Leon",
              "Julius", "Kathy", "Uli", "Leon", "Kamil",
-             "Kathy", "Uli", "Ria", "Leon", "Henri"),
+             "Kathy", "Uli", "Ria", "Leon", "Henri",
+             "Julius", "Kathy", "Ria", "Henri","Freddy", "Leonhardt", "Qi" ),
   Distance = c(0, 166, 912, 912, 3660,
                0, 170000, 136000, 169000,8,
                0, 6, 3470, 57400, 9720,
-               0, 26900, 26900, 48500, 3080),
+               0, 26900, 26900, 48500, 3080,
+               69400, 52200, 0, 68100, 308000, 48100, 20),
   role = c("Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide","Traveler","Traveler","Traveler","Traveler",
-           "Tourguide", "Traveler","Traveler","Traveler","Traveler"),
+           "Tourguide", "Traveler","Traveler","Traveler","Traveler",
+           "Traveler", "Traveler","Tourguide","Traveler","Traveler","Traveler","Traveler"),
   Bonusview = c("no","yes","no","no","no",
                 "no", "no", "no", "no", "yes",
                 "no", "no", "no", "no", "no",
-                "no", "no", "no", "no", "no"),
+                "no", "no", "no", "no", "no",
+                "no", "yes", "no", "no", "no", "no", "yes"
+                ),
   date = as.Date(c("2026-03-29","2026-03-29","2026-03-29","2026-03-29","2026-03-29",
                    "2026-03-31","2026-03-31","2026-03-31","2026-03-31","2026-03-31",
                    "2026-04-01","2026-04-01","2026-04-01","2026-04-01","2026-04-01",
-                   "2026-04-03","2026-04-03","2026-04-03","2026-04-03","2026-04-03"))  # ⭐ NEW
+                   "2026-04-03","2026-04-03","2026-04-03","2026-04-03","2026-04-03",
+                   "2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05"))  # ⭐ NEW
 )
 ```
 
@@ -313,7 +320,8 @@ round_links <- c(
   "Round1.html",
   "Round2.html",
   "Round3.html",
-  "Round4.html" 
+  "Round4.html",
+  "Round5.html"
 )
 names(round_links) <- all_rounds
 
@@ -322,7 +330,8 @@ round_images <- c(
   "Round1_bonus.jpeg",
   "Round2_bonus.jpeg",
   "Round3_bonus.jpeg",
-  "Round4_bonus.jpeg"
+  "Round4_bonus.jpeg",
+  "Round5_bonus.jpeg"
 )
 names(round_images) <- all_rounds
 

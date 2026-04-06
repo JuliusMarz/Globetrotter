@@ -1,0 +1,148 @@
+---
+output:
+  html_document:
+    self_contained: false
+---
+
+<!-- Include Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick Hand&display=swap" rel="stylesheet">
+
+<style>
+/* Base body styling */
+body {
+  background: linear-gradient(
+    rgba(245, 222, 179, 0.25),
+    rgba(245, 222, 179, 0.25)
+  ),
+  url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  font-family: 'Patrick Hand', sans-serif;
+}
+
+/* ⭐ Globetrotters Logo */
+.logo-title {
+  font-family: 'Patrick Hand', cursive;  /* <-- New playful font */
+  font-size: 72px;
+  color: #1d3557;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* subtle shadow for depth */
+}
+
+/* ⭐ Main content card */
+.main-card {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 35px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  position: relative;
+}
+
+/* ⭐ Title style */
+.round-title {
+  font-family: 'Patrick Hand', cursive;
+  text-align: center;
+  color: #1d3557;
+  border: 2px dashed rgba(29, 53, 87, 0.2);
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 12px;
+  background-color: rgba(255,255,255,0.6);
+}
+
+/* 📨 Stamp-style postcard for portrait image */
+.stamp {
+  width: 200px;
+  height: 250px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 4px dotted #1d3557; /* perforation edges */
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  background-color: #fffaf0;
+  transform: rotate(-5deg); /* slight tilt for realism */
+}
+
+.stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stamp-label {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: #1d3557;
+  background: rgba(255,255,255,0.7);
+  padding: 3px 0;
+  font-weight: bold;
+}
+
+/* Handwritten-style postcard message */
+.postcard-message {
+  max-width: 600px;
+  margin: 20px auto 0;
+  padding: 25px 20px;
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: left;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #1d3557;
+  transform: rotate(-1deg); /* slight tilt for handwritten feel */
+  text-shadow: 0.5px 0.5px 0 rgba(0,0,0,0.05);
+}
+</style>
+
+<div style="text-align: center; margin-bottom: 30px;">
+  <div class="logo-title">🌍 Globetrotters</div>
+</div>
+
+<div class="main-card">
+
+  <h2 class="round-title">My Travel Map</h2>
+
+  <!-- Map iframe -->
+  <div style="margin-top: 30px; text-align: center;">
+
+```{r, results='asis', echo=FALSE}
+cat('
+<iframe 
+  src="https://www.google.com/maps/d/u/0/embed?mid=1i13osa9R1CrYKTRNc5zvPJwnownbY-o&ehbc=2E312F" 
+  width="100%" 
+  height="500" 
+  style="border:0; border-radius:12px;">
+</iframe>
+')
+```
+
+  </div>
+
+  <!-- Stamp-style portrait image in top-right corner -->
+```{r, results='asis', echo=FALSE}
+cat('
+<div class="stamp">
+  <img src="Round5_location.jpeg" alt="Travel photo">
+  <div class="stamp-label">✈️ Postcard</div>
+</div>
+')
+```
+
+  <!-- Handwritten postcard message below map -->
+```{r, results='asis', echo=FALSE}
+cat('
+<div class="postcard-message">
+  Thank you for traveling with me! Wish you were here 🌍
+</div>
+')
+```
+
+</div>
