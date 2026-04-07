@@ -323,12 +323,12 @@ all_rounds <- sort(unique(manual_rounds$round))
 # ⭐ NEW: Vector of links per round – you can fill your own URLs here
 # Example: round_links <- c("link_for_round_1", "link_for_round_2", ...)
 round_links <- c(
-  "Round1.html",
-  "Round2.html",
-  "Round3.html",
-  "Round4.html",
-  "Round5.html",
-  "Round6.html"
+  "https://juliusmarz.github.io/Globetrotter/Round1.html",
+  "https://juliusmarz.github.io/Globetrotter/Round2.html",
+  "https://juliusmarz.github.io/Globetrotter/Round3.html",
+  "https://juliusmarz.github.io/Globetrotter/Round4.html",
+  "https://juliusmarz.github.io/Globetrotter/Round5.html",
+  "https://juliusmarz.github.io/Globetrotter/Round6.html"
 )
 names(round_links) <- all_rounds
 

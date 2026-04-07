@@ -130,7 +130,7 @@ cat('
 ```{r, results='asis', echo=FALSE}
 cat('
 <div class="stamp">
-  <img src="Round3_location.jpeg" alt="Travel photo">
+  <img src="https://juliusmarz.github.io/Globetrotter/Round3_location.jpeg" alt="Travel photo">
   <div class="stamp-label">✈️ Postcard</div>
 </div>
 ')
