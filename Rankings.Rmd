@@ -135,30 +135,35 @@ manual_rounds <- data.frame(
             3,3,3,3,3,
             4,4,4,4,4,
             5,5,5,5,5,5,5,
-            6,6,6,6,6,6,6,6),
+            6,6,6,6,6,6,6,6,
+            7,7,7,7,7,7,7,7),
   player = c("Julius","Kathy","Uli","Ria","Leon",
              "Julius","Kathy","Uli","Ria","Leon",
              "Julius", "Kathy", "Uli", "Leon", "Kamil",
              "Kathy", "Uli", "Ria", "Leon", "Henri",
              "Julius", "Kathy", "Ria", "Henri","Freddy", "Leonhard", "Qi",
-             "Julius", "Kathy", "Uli", "Ria", "Leon", "Henri", "Leonhard", "Qi"),
+             "Julius", "Kathy", "Uli", "Ria", "Leon", "Henri", "Leonhard", "Qi",
+             "Julius", "Kathy", "Uli","Ria", "Leon", "Henri", "Leonhard", "Qi"),
   Distance = c(0, 166, 912, 912, 3660,
                0, 170000, 136000, 169000,8,
                0, 6, 3470, 57400, 9720,
                0, 26900, 26900, 48500, 3080,
                69400, 52200, 0, 68100, 308000, 48100, 20,
-               132000, 227000, 129000, 191000, 76800, 0, 155000, 32900),
+               132000, 227000, 129000, 191000, 76800, 0, 155000, 32900,
+               27, 24, 74000,74700, 0, 10, 8, 28),
   role = c("Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide","Traveler","Traveler","Traveler","Traveler",
            "Tourguide", "Traveler","Traveler","Traveler","Traveler",
            "Traveler", "Traveler","Tourguide","Traveler","Traveler","Traveler","Traveler",
-           "Traveler", "Traveler","Traveler","Traveler","Traveler","Tourguide","Traveler", "Traveler"),
+           "Traveler", "Traveler","Traveler","Traveler","Traveler","Tourguide","Traveler", "Traveler",
+           "Traveler", "Traveler","Traveler","Traveler","Tourguide","Traveler","Traveler","Traveler"),
   Bonusview = c("no","yes","no","no","no",
                 "no", "no", "no", "no", "yes",
                 "no", "no", "no", "no", "no",
                 "no", "no", "no", "no", "no",
                 "no", "yes", "no", "no", "no", "no", "yes",
+                "no", "no", "no", "no", "no", "no", "no", "no",
                 "no", "no", "no", "no", "no", "no", "no", "no"
                 ),
   date = as.Date(c("2026-03-29","2026-03-29","2026-03-29","2026-03-29","2026-03-29",
@@ -166,7 +171,8 @@ manual_rounds <- data.frame(
                    "2026-04-01","2026-04-01","2026-04-01","2026-04-01","2026-04-01",
                    "2026-04-03","2026-04-03","2026-04-03","2026-04-03","2026-04-03",
                    "2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05","2026-04-05",
-                   "2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06", "2026-04-06"))  # ⭐ NEW
+                   "2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06","2026-04-06", "2026-04-06",
+                   "2026-04-07","2026-04-07","2026-04-07","2026-04-07","2026-04-07","2026-04-07","2026-04-07", "2026-04-07"))  # ⭐ NEW
 )
 ```
 
@@ -328,18 +334,20 @@ round_links <- c(
   "https://juliusmarz.github.io/Globetrotter/Round3.html",
   "https://juliusmarz.github.io/Globetrotter/Round4.html",
   "https://juliusmarz.github.io/Globetrotter/Round5.html",
-  "https://juliusmarz.github.io/Globetrotter/Round6.html"
+  "https://juliusmarz.github.io/Globetrotter/Round6.html",
+  "https://juliusmarz.github.io/Globetrotter/Round7.html"
 )
 names(round_links) <- all_rounds
 
 # ⭐ NEW: Bonusview images per round
 round_images <- c(
-  "Round1_bonus.jpeg",
-  "Round2_bonus.jpeg",
-  "Round3_bonus.jpeg",
-  "Round4_bonus.jpeg",
-  "Round5_bonus.jpeg",
-  "Round6_bonus.jpeg"
+  "https://juliusmarz.github.io/Globetrotter/Round1_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round2_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round3_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round4_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round5_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round6_bonus.jpeg",
+  "https://juliusmarz.github.io/Globetrotter/Round7_bonus.jpeg"
 )
 names(round_images) <- all_rounds
 
