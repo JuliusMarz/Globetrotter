@@ -1,0 +1,183 @@
+---
+title: "🌍 Globetrotters"
+output:
+  html_document:
+    self_contained: false
+runtime: shiny
+output_file: "Interactive_Map.html" 
+---
+
+<!-- Google Font + Styles -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+body {
+  background: linear-gradient(
+    rgba(245, 222, 179, 0.25),
+    rgba(245, 222, 179, 0.25)
+  ),
+  url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  font-family: 'Patrick Hand', sans-serif;
+}
+
+.logo-title {
+  text-align: center;
+  font-size: 64px;
+  color: #1d3557;
+  margin-bottom: 10px;
+}
+
+.main-card {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 35px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+}
+
+.round-title {
+  text-align: center;
+  color: #1d3557;
+  border: 2px dashed rgba(29, 53, 87, 0.2);
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 12px;
+}
+
+.input-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+#username {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+.btn-primary-custom {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: #457b9d;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: #1d3557;
+  transform: scale(1.05);
+}
+</style>
+
+<div class="logo-title">Round 8</div>
+<div class="main-card">
+<h2 class="round-title">Guess the Location</h2>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  results = "asis"
+)
+
+library(shiny)
+library(leaflet)
+library(geosphere)
+library(googlesheets4)
+
+# Authenticate with Google Sheets (run interactively first)
+gs4_auth(scopes = "https://www.googleapis.com/auth/spreadsheets")
+
+# Your Google Sheet ID
+sheet_id <- "1ApiK4wU_XZ4AIRfblEHg6Lnm-shaso9US8mYTj3Hpu0"
+```
+
+
+```{r}
+# Shiny UI
+fluidPage(
+  div(class = "input-row",
+      textInput("username", NULL, placeholder = "Enter username", width = "250px"),
+      actionButton("submit_guess", "🎯 Confirm Guess", class = "btn-primary-custom")
+  ),
+  leafletOutput("map", height = "500px"),
+  br(),
+  verbatimTextOutput("info")
+)
+# Shiny Server
+current_guess <- reactiveVal(NULL)
+
+# Render map
+output$map <- renderLeaflet({
+  leaflet() %>%
+    addTiles() %>%
+    setView(lng = 0, lat = 20, zoom = 2)
+})
+
+# Click → place marker only
+observeEvent(input$map_click, {
+  lat <- input$map_click$lat
+  lng <- input$map_click$lng
+  current_guess(c(lat = lat, lng = lng))
+  
+  leafletProxy("map") %>%
+    clearMarkers() %>%
+    addMarkers(lng = lng, lat = lat)
+  
+  output$info <- renderPrint({
+    paste("📍 Selected location:", round(lat, 4), round(lng, 4))
+  })
+})
+
+# Submit → validate + save to Google Sheet
+observeEvent(input$submit_guess, {
+  guess <- current_guess()
+  username <- input$username
+  
+  if (is.null(guess)) {
+    output$info <- renderPrint({"❌ Click on the map first!"})
+    return()
+  }
+  
+  if (is.null(username) || username == "") {
+    output$info <- renderPrint({"❌ Please enter a username!"})
+    return()
+  }
+  
+  lat <- guess["lat"]
+  lng <- guess["lng"]
+  
+  new_row <- data.frame(
+    username = username,
+    lat = lat,
+    lng = lng,
+    time = Sys.time()
+  )
+  
+  # Append to Google Sheet
+  sheet_append(ss = sheet_id, data = new_row)
+  
+  # Example distance calculation
+  true_lat <- 50
+  true_lng <- 10
+  dist <- distHaversine(c(lng, lat), c(true_lng, true_lat))
+  
+  output$info <- renderPrint({
+    paste(
+      "✅ Guess submitted!",
+      "\n👤 Player:", username,
+      "\n📍 Your guess:", round(lat, 4), round(lng, 4),
+      "\n📏 Distance (meters):", round(dist)
+    )
+  })
+})
