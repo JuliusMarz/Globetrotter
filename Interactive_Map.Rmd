@@ -3,7 +3,6 @@ title: "🌍 Globetrotters"
 output:
   html_document:
     self_contained: false
-runtime: shiny
 output_file: "Interactive_Map.html" 
 ---
 
