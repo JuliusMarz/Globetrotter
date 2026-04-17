@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Rulebook.knit</title>
+
+<script src="Rulebook_files/header-attrs-2.25/header-attrs.js"></script>
+<script src="Rulebook_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Rulebook_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Rulebook_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Rulebook_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Rulebook_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Rulebook_files/navigation-1.1/tabsets.js"></script>
+<link href="Rulebook_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Rulebook_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<!-- Include Google Font -->
+<p><link href="https://fonts.googleapis.com/css2?family=Patrick Hand&display=swap" rel="stylesheet"></p>
+<style>
+/* Base body styling */
+body {
+  background: linear-gradient(
+    rgba(245, 222, 179, 0.25),
+    rgba(245, 222, 179, 0.25)
+  ),
+  url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  font-family: 'Patrick Hand', sans-serif;
+}
+
+/* ⭐ Globetrotters Logo */
+.logo-title {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 72px;
+  color: #1d3557;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* ⭐ Main content card */
+.main-card {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 35px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* ⭐ Title style */
+.round-title {
+  font-family: 'Patrick Hand', cursive;
+  text-align: center;
+  color: #1d3557;
+  border: 2px dashed rgba(29, 53, 87, 0.2);
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 12px;
+  background-color: rgba(255,255,255,0.6);
+}
+
+/* 📝 BIG TEXT BLOCK */
+.text-block {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-size: 24px;
+  line-height: 1.6;
+  color: #1d3557;
+  text-align: left;
+}
+</style>
+<div style="text-align: center; margin-bottom: 30px;">
+<div class="logo-title">
+🌍 Globetrotters
+</div>
+</div>
+<div class="main-card">
+
+<h2 class="round-title">
+Rulebook
+</h2>
+<div class="text-block">
+
+<p><b>Welcome</b> to our friendly little Globetrotters community!
+🌍<br />
+This is a space to explore the world, and share your favorite travel (or
+everyday) photos.<br><br></p>
+<b>🌍 How it works</b><br>
+<ul>
+<li>
+Each round, one player is the <b>Tourguide</b> and shares a photo.
+</li>
+<li>
+All other players are <b>Travelers</b> and try to guess the location.
+</li>
+<li>
+The closer your guess, the more points you earn.
+</li>
+</ul>
+<b>🧭 For Travelers</b><br>
+<ul>
+<li>
+You have <b>24 hours</b> to submit your guess.
+</li>
+<li>
+Enter your guess directly on the map in the <b>Current Round</b>
+section.
+</li>
+<li>
+You may <b>change your guess once</b> within 1 hour after submitting.
+</li>
+<li>
+You can earn up to <b>5000 points</b> per round.
+</li>
+<li>
+Every <b>200m distance = -1 point</b> (0 points beyond 1000km).
+</li>
+<li>
+You may request a <b>Bonusview</b>:
+<ul>
+<li>
+-500 points for you
+</li>
+<li>
++200 points for the Tourguide
+</li>
+<li>
+Score cannot drop below 0
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<b>📸 For Tourguides</b><br>
+<ul>
+<li>
+The photo must be <b>taken by you</b>.
+</li>
+<li>
+It must be <b>no older than 1 week</b>.
+</li>
+<li>
+The location must be findable on <b>Google Street View (within
+~100m)</b><br> (exceptions: countries without Street View, e.g. China).
+</li>
+<li>
+You may provide <b>one Bonusview</b>:
+<ul>
+<li>
+Must be from a similar location
+</li>
+<li>
+Must provide meaningful additional clues
+</li>
+</ul>
+</li>
+<li>
+Your score per round:
+<ul>
+<li>
+<b>Best guess points − worst guess points</b>
+</li>
+<li>
++200 points per Bonusview usage
+</li>
+</ul>
+</li>
+<li>
+Inactive player bonus:
+<ul>
+<li>
+<ul>
+<li>(5000 / total players) per inactive Traveler (Capped at <b>2000
+points per round)
+</li>
+</ul>
+</li>
+</ul></li>
+</ul>
+<b>🏆 Rankings</b><br>
+<ul>
+<li>
+Updated after every round
+</li>
+<li>
+Based on: <br><b>Total Points ÷ (Traveler games + Tourguide games / 2).
+Punkt vor Strich!</b>
+</li>
+</ul>
+<b>🎁 Bonus Points</b><br>
+<ul>
+<li>
+<b>Top 10 closest guesses (year-long ranking):</b>
+<ul>
+<li>
+🥇 1st: 1000 pts
+</li>
+<li>
+🥈 2nd: 900 pts
+</li>
+<li>
+🥉 3rd: 800 pts
+</li>
+<li>
+… down to 100 pts
+</li>
+</ul>
+</li>
+<li>
+<b>Most Traveler rounds:</b> +2500 pts
+</li>
+<li>
+<b>Most Tourguide rounds:</b> +2500 pts
+</li>
+<li>
+<b>Most countries submitted as a Tourguide (≥3):</b> +5000 pts
+</li>
+<li>
+Each player can only win <b>one</b> of these three bonuses
+</li>
+<li>
+If tied → everyone receives full points
+</li>
+</ul>
+<b>🎉 Final Prize</b><br>
+<ul>
+<li>
+The overall winner receives a <b>surprise prize</b> 🎁
+</li>
+<li>
+Requirement:
+<ul>
+<li>
+At least 5 Traveler rounds
+</li>
+<li>
+At least 1 Tourguide round
+</li>
+</ul>
+</li>
+</ul>
+<b>⚙️ Notes</b><br>
+<ul>
+<li>
+Rules are always open to change, just let me know :)
+</li>
+</ul>
+<p><br> <b>Have fun! 🌍✈️</b></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
