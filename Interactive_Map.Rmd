@@ -1,85 +1,191 @@
 ---
-title: "🌍 Globetrotters"
+title: "_"
 output:
   html_document:
     self_contained: false
-output_file: "Interactive_Map.html" 
+runtime: shiny
+resource_files:
+- "globetrotters-app-492812-a1f60d65dfa4.json"
 ---
 
-<!-- Google Font + Styles -->
+<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+
 
 <style>
 body {
-  background: linear-gradient(
-    rgba(245, 222, 179, 0.25),
-    rgba(245, 222, 179, 0.25)
-  ),
-  url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  background: rgba(246, 224, 194, 1);
   font-family: 'Patrick Hand', sans-serif;
 }
-
-.logo-title {
-  text-align: center;
-  font-size: 64px;
-  color: #1d3557;
-  margin-bottom: 10px;
+body {
+  padding-top: 120px;
 }
-
-.main-card {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 35px;
-  background-color: rgba(255, 255, 255, 0.92);
-  border-radius: 18px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
-}
-
-.round-title {
-  text-align: center;
-  color: #1d3557;
-  border: 2px dashed rgba(29, 53, 87, 0.2);
-  display: inline-block;
-  padding: 8px 20px;
-  border-radius: 12px;
-}
-
-.input-row {
+.logo-header {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 15px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.logo-img {
+  height: 270px;
+}
+
+.logo-text {
+  font-size: 48px;
+  color: #1d3557;
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
-#username {
-  padding: 10px 15px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 18px;
+/* keeps title perfectly centered */
+.spacer-left,
+.logo-right {
+  width: 120px; /* same width = perfect centering */
+  display: flex;
+  justify-content: center;
+}
+.round-title {
+  flex: 1;
+  text-align: center;
+  font-size: 90px;   /* 👈 BIGGER TEXT */
+  color: #1d3557;
+  margin: 0;
+}
+
+/* logo styling */
+.logo-right img {
+  height: 70px;
+}
+.page-title {
+  text-align: center;
+  font-size: 80px;
+  color: #1d3557;
   font-family: 'Patrick Hand', cursive;
+  margin-bottom: 20px;
+}
+.main-card { max-width:1200px; margin:40px auto; padding:35px; background-color:rgba(255,255,255,0.92); border-radius:18px; box-shadow:0 6px 25px rgba(0,0,0,0.08); }
+.input-row { display:flex; justify-content:center; align-items:center; gap:15px; margin-bottom:20px; }
+#username { padding:10px 15px; border-radius:10px; border:1px solid #ccc; font-size:18px; font-family:'Patrick Hand', cursive; }
+.btn-primary-custom { padding:10px 20px; border-radius:10px; border:none; background-color:#457b9d; color:white; font-size:18px; cursor:pointer; transition: all 0.2s ease; }
+.btn-primary-custom:hover { background-color:#1d3557; transform:scale(1.05); }
+
+
+/* ---------- STAR BUTTON FIX ---------- */
+
+/* ---------- STAR BUTTON FIX ---------- */
+
+.radio-group-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  flex-wrap: nowrap !important;
 }
 
-.btn-primary-custom {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  background-color: #457b9d;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.radio-group-buttons .btn {
+
+  font-size: 9px !important;
+  padding: 4px 6px !important;
+
+  min-width: 42px !important;
+  width: auto !important;
+
+  border-radius: 8px !important;
+
+  overflow: hidden !important;
+  white-space: nowrap !important;
+
+  line-height: 1.1 !important;
 }
 
-.btn-primary-custom:hover {
-  background-color: #1d3557;
-  transform: scale(1.05);
+/* ---------- STAR BUTTON FIX ---------- */
+
+.radio-group-buttons .btn {
+  font-size: 10px !important;
+  padding: 2px 4px !important;
+  min-width: 30px !important;
+  max-width: 40px !important;
+  line-height: 1 !important;
 }
+
+.radio-group-buttons {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: center;
+  gap: 2px;
+}
+
+</style>
 </style>
 
-<div class="logo-title">Round 8</div>
+<style>
+.map-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.map-left {
+  flex: 2;
+}
+
+.map-right {
+  flex: 1;
+}
+/* STAMP STYLE */
+.stamp {
+  background: white;
+  padding: 12px;
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+/* perforated edges */
+.stamp::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  background:
+    radial-gradient(circle, transparent 8px, white 9px) repeat;
+  background-size: 22px 22px;
+  z-index: -1;
+}
+
+/* image inside */
+.stamp img {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+}
+
+
+.location-image {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+</style>
+
+
+
+<div class="logo-header">
+  <img src="https://juliusmarz.github.io/Globetrotter/Logo4.png" class="logo-img">
+  <span class="logo-text"></span>
+</div>
+
+<div class="page-title">BonusRound!</div>
 <div class="main-card">
-<h2 class="round-title">Guess the Location</h2>
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -89,94 +195,281 @@ knitr::opts_chunk$set(
   results = "asis"
 )
 
-library(shiny)
-library(leaflet)
-library(geosphere)
-library(googlesheets4)
-
-# Authenticate with Google Sheets (run interactively first)
-gs4_auth(scopes = "https://www.googleapis.com/auth/spreadsheets")
-
-# Your Google Sheet ID
-sheet_id <- "1ApiK4wU_XZ4AIRfblEHg6Lnm-shaso9US8mYTj3Hpu0"
 ```
 
 
 ```{r}
-# Shiny UI
+library(shiny)
+library(shinyWidgets)
+library(leaflet)
+library(geosphere)
+library(googlesheets4)
+```
+
+
+```{r}
+#my_token <- readRDS("token.rds")
+
+# Use it for authentication
+#gs4_auth(token = my_token)
+
+#gs4_auth(token = "token_cache/7a6077d23f6776ccc63f8f70bc12b214_siso.information@gmail.com.rds")
+
+# Your sheet ID
+
+gs4_auth(path = "globetrotters-app-492812-a1f60d65dfa4.json")
+
+sheet_id <- "1ApiK4wU_XZ4AIRfblEHg6Lnm-shaso9US8mYTj3Hpu0"
+
+ratings_sheet <- "ratings"
+```
+
+```{r}
+# UI
+# UI
 fluidPage(
-  div(class = "input-row",
-      textInput("username", NULL, placeholder = "Enter username", width = "250px"),
-      actionButton("submit_guess", "🎯 Confirm Guess", class = "btn-primary-custom")
+  div(class="input-row",
+      textInput("username", NULL, placeholder="Enter username", width="250px"),
+      actionButton("submit_guess", "🎯 Confirm Guess", class="btn-primary-custom")
   ),
-  leafletOutput("map", height = "500px"),
-  br(),
-  verbatimTextOutput("info")
+
+  div(class = "map-container",
+      
+      div(class = "map-left",
+          leafletOutput("map", height="500px")
+      ),
+      
+      div(class = "map-right",
+          div(class="stamp",
+    img(src="https://juliusmarz.github.io/Globetrotter/BonusRound_location.jpeg")
 )
-# Shiny Server
+      )
+  ),
+
+  br(),
+
+conditionalPanel(
+  condition = "output.show_rating == true",
+
+  div(
+    style = "
+      margin-top:30px;
+      padding:25px;
+      background:white;
+      border-radius:15px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    ",
+
+    h2("⭐ Rate this Round",
+       style="color:#1d3557; text-align:center;"),
+
+    br(),
+
+    fluidRow(
+
+  column(
+    4,
+
+    h3("🌅 Beauty",
+       style="text-align:center; color:#1d3557;"),
+
+    radioGroupButtons(
+      inputId = "beauty",
+      choices = c("1★","2★","3★","4★","5★"),
+      selected = "⭐⭐⭐⭐⭐",
+      justified = FALSE,
+      status = "primary",
+      size = "sm",
+      individual = TRUE,
+      checkIcon = list(yes = icon("star"))
+    )
+  ),
+
+  column(
+    4,
+
+    h3("🗺 Uniqueness",
+       style="text-align:center; color:#1d3557;"),
+
+    radioGroupButtons(
+      inputId = "uniqueness",
+      choices = c("1★","2★","3★","4★","5★"),
+      selected = "⭐⭐⭐⭐⭐",
+      justified = FALSE,
+      status = "primary",
+      size = "sm",
+      individual = TRUE,
+      checkIcon = list(yes = icon("star"))
+    )
+  ),
+
+  column(
+    4,
+
+    h3("🧩 Difficulty",
+       style="text-align:center; color:#1d3557;"),
+
+    radioGroupButtons(
+      inputId = "difficulty",
+      choices = c("1★","2★","3★","4★","5★"),
+      selected = "⭐⭐⭐⭐⭐",
+      justified = FALSE,
+      status = "primary",
+      size = "sm",
+      individual = TRUE,
+      checkIcon = list(yes = icon("star"))
+    )
+  )
+),
+
+    div(
+      style="text-align:center; margin-top:20px;",
+      actionButton(
+        "submit_rating",
+        "⭐ Submit Ratings",
+        class="btn-primary-custom"
+      )
+    )
+  )
+),
+
+br(),
+verbatimTextOutput("info")
+)
+```
+
+```{r}
+# SERVER
 current_guess <- reactiveVal(NULL)
 
-# Render map
-output$map <- renderLeaflet({
-  leaflet() %>%
-    addTiles() %>%
-    setView(lng = 0, lat = 20, zoom = 2)
+output$show_rating <- reactive({
+  show_rating()
 })
 
-# Click → place marker only
+outputOptions(output, "show_rating", suspendWhenHidden = FALSE)
+
+show_rating <- reactiveVal(FALSE)
+
+# Map
+output$map <- renderLeaflet({
+  leaflet() %>% addTiles() %>% setView(lng=0, lat=20, zoom=2)
+})
+
+# Map click
 observeEvent(input$map_click, {
   lat <- input$map_click$lat
   lng <- input$map_click$lng
-  current_guess(c(lat = lat, lng = lng))
-  
-  leafletProxy("map") %>%
-    clearMarkers() %>%
-    addMarkers(lng = lng, lat = lat)
-  
-  output$info <- renderPrint({
-    paste("📍 Selected location:", round(lat, 4), round(lng, 4))
-  })
+  current_guess(c(lat=lat, lng=lng))
+  leafletProxy("map") %>% clearMarkers() %>% addMarkers(lng=lng, lat=lat)
+  output$info <- renderPrint({ paste("📍 Selected location:", round(lat,4), round(lng,4)) })
 })
 
-# Submit → validate + save to Google Sheet
+# Submit guess
 observeEvent(input$submit_guess, {
   guess <- current_guess()
   username <- input$username
-  
-  if (is.null(guess)) {
-    output$info <- renderPrint({"❌ Click on the map first!"})
-    return()
-  }
-  
-  if (is.null(username) || username == "") {
-    output$info <- renderPrint({"❌ Please enter a username!"})
-    return()
-  }
-  
-  lat <- guess["lat"]
-  lng <- guess["lng"]
-  
-  new_row <- data.frame(
-    username = username,
-    lat = lat,
-    lng = lng,
-    time = Sys.time()
-  )
-  
-  # Append to Google Sheet
-  sheet_append(ss = sheet_id, data = new_row)
-  
-  # Example distance calculation
-  true_lat <- 50
-  true_lng <- 10
-  dist <- distHaversine(c(lng, lat), c(true_lng, true_lat))
-  
+  if(is.null(guess)){ output$info <- renderPrint({"❌ Click on the map first!"}); return() }
+  if(is.null(username) || username==""){ output$info <- renderPrint({"❌ Please enter a username!"}); return() }
+
+  # Save temporary guess
+# Create unique submission ID
+submission_id <- paste0(
+  username,
+  "_",
+  as.integer(Sys.time())
+)
+
+new_row <- data.frame(
+  submission_id = submission_id,
+  username = username,
+  lat = guess["lat"],
+  lng = guess["lng"],
+  timestamp = Sys.time(),
+  beauty = NA,
+  uniqueness = NA,
+  difficulty = NA
+)
+
+tryCatch({
+
+  # Save guess immediately
+  sheet_append(sheet_id, new_row)
+
+  # Store ID for optional later rating
+  submitted_guess_id <<- submission_id
+
+  # Show rating panel optionally
+  show_rating(TRUE)
+
   output$info <- renderPrint({
+
     paste(
       "✅ Guess submitted!",
-      "\n👤 Player:", username,
-      "\n📍 Your guess:", round(lat, 4), round(lng, 4),
-      "\n📏 Distance (meters):", round(dist)
+      "\n⭐ Optional: Rate this round below."
     )
   })
+
+}, error = function(e){
+
+  output$info <- renderPrint({
+    paste("❌ Submission failed:", e$message)
+  })
+
 })
+})
+
+# Submit ratings + final save
+# Submit optional ratings
+# Submit optional ratings
+observeEvent(input$submit_rating, {
+
+  username <- input$username
+
+  if(is.null(username) || username == "") {
+
+    output$info <- renderPrint({
+      "❌ Username missing."
+    })
+
+    return()
+  }
+
+  rating_row <- data.frame(
+
+    username = username,
+
+    beauty <- as.numeric(sub("★", "", input$beauty)),
+uniqueness <- as.numeric(sub("★", "", input$uniqueness)),
+difficulty <- as.numeric(sub("★", "", input$difficulty)),
+
+    timestamp = Sys.time()
+  )
+
+  tryCatch({
+
+    sheet_append(
+      ss = sheet_id,
+      data = rating_row,
+      sheet = ratings_sheet
+    )
+
+    show_rating(FALSE)
+
+    output$info <- renderPrint({
+
+      paste(
+        "⭐ Ratings submitted successfully!"
+      )
+    })
+
+  }, error = function(e){
+
+    output$info <- renderPrint({
+      paste("❌ Rating submission failed:", e$message)
+    })
+
+  })
+})
+```
+
+</div>
